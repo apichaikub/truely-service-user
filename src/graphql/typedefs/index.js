@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server-express'
 
 import userTypeDefs from './user'
+import meTypeDefs from './me'
 
 const linkSchema = gql`
   scalar Date
@@ -21,4 +22,5 @@ const linkSchema = gql`
 export default [
   linkSchema,
   ...userTypeDefs,
+  ...meTypeDefs,
 ]
