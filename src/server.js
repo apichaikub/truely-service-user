@@ -8,16 +8,18 @@ import { postgreAccountDB } from './database'
 import { models } from './models'
 import router from './routes'
 import faker from './helper/faker'
+import cors from 'cors'
 
-const { port } = config
 const app = express()
-const graphqlPath = '/graphql'
+
+// Enable All CORS Requests
+app.use(cors())
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req: { headers } }) => {
     const user = await getAuth(headers.authorization)
-
     return {
       user,
       models,
@@ -27,7 +29,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({
   app,
-  path: graphqlPath,
+  path: '/graphql',
 })
 
 app.use(router)
@@ -37,6 +39,6 @@ postgreAccountDB.sync({ force: true }).then(() => {
   console.log('user service sync to postgreAccountDB success.')
 })
 
-app.listen(port, () => {
-  console.log(`Running on port: ${port}`)
+app.listen(config.port, () => {
+  console.log(`Running on port: ${config.port}`)
 })
